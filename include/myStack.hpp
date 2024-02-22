@@ -50,11 +50,13 @@ class myStack{
 		
 
 		myStack<DataType>& operator=(myStack<DataType>&& stack){
-			delete[] this->data;
-			this->data = stack.data;
-			this->size = stack.size;
-			stack.size = 0;
-			stack.data = nullptr;
+			if(this != &stack){
+				delete[] this->data;
+				this->data = stack.data;
+				this->size = stack.size;
+				stack.size = 0;
+				stack.data = nullptr;
+			}
 			return *this;
 		}
 
