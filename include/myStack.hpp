@@ -72,12 +72,10 @@ class myStack{
 
 		void pop(){
 			VERIFY_CONTRACT(this->size != 0, "Stack is empty");
-			// if (this->size != 1){
 			DataType *less_arr = new DataType[this->size-1];
 			std::copy_n(this->data, this->size-1, less_arr);
 			delete[] this->data;
 			this->data = less_arr;
-			// }
 			this->size--;
 		}
 
