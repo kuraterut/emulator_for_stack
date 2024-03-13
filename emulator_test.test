@@ -3,5 +3,5 @@ IN
 IN
 MUL
 OUT
-PUSH 1
+PUSH 2
 END
