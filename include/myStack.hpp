@@ -10,7 +10,10 @@ class myStack{
 	
 	public:
 		//Конструкторы и деструкторы:
-		myStack() {this->data = new DataType[1]; this->size = 0;}
+		myStack() {
+			this->data = new DataType[1]; 
+			this->size = 0;
+		}
 		
 		myStack(const DataType& cur_data){
 			this->data = new DataType[1];
