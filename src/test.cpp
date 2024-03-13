@@ -205,7 +205,8 @@ int main(void)
     run_test("check stack size",                          test_is_empty           );
     run_test("check stack is empty",                      test_stack_size         );
     
-    Parser parser("emulator_test.test");
+    // Parser parser("emulator_test.test");
+    Parser parser("fibonacci_test_1_12.test");
 
     Emulator eml(parser.parse_programm());
     

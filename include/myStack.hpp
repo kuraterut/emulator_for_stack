@@ -24,7 +24,6 @@ class myStack{
 		//Копирование и перемещение с присваиванием
 		myStack<DataType>& operator=(const myStack<DataType>& stack);
 		
-
 		myStack<DataType>& operator=(myStack<DataType>&& stack);
 
 		
