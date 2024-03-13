@@ -29,6 +29,7 @@ class myStack{
 
 		
 		void push(const DataType& cur_data);
+		void push(DataType&& cur_data);
 
 		void pop();
 
@@ -107,6 +108,19 @@ void myStack<DataType>::push(const DataType& cur_data){
 	this->data[this->size] = cur_data;
 	this->size++;
 }
+
+template <typename DataType>
+void myStack<DataType>::push(DataType&& cur_data){
+	if (this->size != 0){
+		DataType *new_arr = new DataType[this->size+1];
+		std::copy_n(this->data, this->size, new_arr);
+		delete[] this->data;
+		this->data = new_arr;
+	}
+	this->data[this->size] = cur_data;
+	this->size++;
+}
+
 
 template <typename DataType>
 void myStack<DataType>::pop(){
