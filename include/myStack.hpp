@@ -58,6 +58,7 @@ myStack<DataType>::myStack(const DataType& cur_data){
 template <typename DataType>
 myStack<DataType>::~myStack(){
 	delete[] this->data;
+
 	this->size = 0;
 	this->capacity = 1;
 }
@@ -112,11 +113,14 @@ void myStack<DataType>::push(const DataType& cur_data){
 	if (this->size == this->capacity){
 		DataType *new_arr = new DataType[this->size*2+1];
 		std::copy_n(this->data, this->size, new_arr);
+		this->capacity = this->capacity*2+1;
 		delete[] this->data;
 		this->data = new_arr;
 	}
 	this->data[this->size] = cur_data;
 	this->size++;
+
+
 }
 
 template <typename DataType>
@@ -125,6 +129,7 @@ void myStack<DataType>::push(DataType&& cur_data){
 		DataType *new_arr = new DataType[this->size*2+1];
 		std::copy_n(this->data, this->size, new_arr);
 		delete[] this->data;
+		this->capacity = this->capacity*2 + 1;	
 		this->data = new_arr;
 	}
 	this->data[this->size] = cur_data;

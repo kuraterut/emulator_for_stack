@@ -35,6 +35,7 @@ class Emulator;
 
 class Command{
 	public: 
+		virtual ~Command() {}
 		virtual void execute(Emulator* emulator) = 0;
 		// ~Command() = default;
 };

@@ -169,6 +169,7 @@ void Parser::parse_command_line(Command*& ret, int& status, int number)
 		ret = new CommandPUSH();
 		parse_value(val, number);
 		dynamic_cast<CommandPUSH*>(ret)->value = val;
+		// std::cout << ret << std::endl;
 		break;
 
 	case cmd_id::POP:
@@ -212,7 +213,7 @@ void Parser::parse_command_line(Command*& ret, int& status, int number)
 			exit(1);
 		}
 		status = 0;
-		
+	
 	// case CMD_ID::JMP:
 	// 	ret = new Cmd_JMP();
 	// 	status = 1;

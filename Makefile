@@ -8,11 +8,13 @@ CC = g++
 CFLAGS = \
 	-std=c++17 \
 	-O2
+# 	-g3
+	
 	
 
 # Linker flags:
 # NOTE: it is sometimes required to link to math library.
-# LDFLAGS =
+#LDFLAGS =
 
 # Select build mode:
 # NOTE: invoke with "DEBUG=1 make" or "make DEBUG=1".
@@ -24,6 +26,9 @@ else
 	CFLAGS  += -flto
 	LDFLAGS += -flto
 endif
+
+# CFLAGS = -fsanitize=undefined,address -g3 -O0
+# LDFLAGS = -fsanitize=undefined,address -g3 -O0
 
 #--------
 # Colors

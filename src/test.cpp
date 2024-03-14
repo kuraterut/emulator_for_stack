@@ -207,10 +207,13 @@ int main(void)
     
     // Parser parser("emulator_test.test");
     Parser parser("fibonacci_test_1_12.test");
+    // Parser parser("help.test");
 
     Emulator eml(parser.parse_programm());
+
     
     eml.run();
+
 
     return EXIT_SUCCESS;
 }
