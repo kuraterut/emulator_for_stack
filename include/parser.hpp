@@ -40,10 +40,10 @@ private:
 	
 	std::string parse_command_name();
 	
-	Reg_t parse_register();
-	bool parse_value(Value_t& val);
+	Reg_t parse_register(int number);
+	bool parse_value(Value_t& val, int number);
 
-	// bool parse_label_name(std::string& name);
+	bool parse_label_name(std::string& name);
 
 	bool parse_space_seq();
 	bool parse_newline_seq();

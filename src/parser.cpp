@@ -3,6 +3,7 @@
 #include <regex>
 #include <fstream>
 #include <iterator>
+#include <cstdint>
 
 #include "../include/parser.hpp"
 #include "../include/command.hpp"
@@ -87,7 +88,7 @@ bool Parser::parse_newline_seq()
 
 }
 
-bool Parser::parse_value(Value_t& value)
+bool Parser::parse_value(Value_t& value, int number)
 {
 	parse_space_seq();
 
@@ -97,32 +98,40 @@ bool Parser::parse_value(Value_t& value)
 
 	bool success = parse_pattern(pat, val);
 
-	if (success)
-	{
+	if (success){
 		value = std::stoi(val);
+	}
+	else{
+		std::string text_err = "ERROR in command number: " + std::to_string(number+1) + ", Invalid value in line: " + std::string(line_);
+		std::cout << text_err << std::endl;
+		exit(1);
 	}
 
 	return success;
 }
 
-// bool Parser::parse_label_name(std::string& name)
-// {
-// 	parse_space_seq();
+bool Parser::parse_label_name(std::string& name)
+{
+	parse_space_seq();
 
-// 	std::regex pat("[a-zA-Z0-9_]+");
+	std::regex pat("[a-zA-Z0-9_]+");
 
-// 	return parse_pattern(pat, name);
+	return parse_pattern(pat, name);
 
-// }
+}
 
-Reg_t Parser::parse_register()
+Reg_t Parser::parse_register(int number)
 {
 	parse_space_seq();
 
 	std::regex pat("AX|BX|CX|DX|EX|FX|PC");
 	std::string reg;
-	parse_pattern(pat, reg);
-
+	bool success = parse_pattern(pat, reg);
+	if (!success){
+		std::string text_err = "ERROR in command number: " + std::to_string(number+1) + ", Invalid register name in line: " + std::string(line_);
+		std::cout << text_err << std::endl;
+		exit(1);
+	}
 	return reg_from_name_to_id(reg);
 }
 
@@ -130,8 +139,12 @@ std::string Parser::parse_command_name()
 {
 	std::regex pat("PUSHR|POPR|BEGIN|END|PUSH|POP|ADD|SUB|MUL|DIV|OUT|IN|[a-zA-Z0-9_]+:");
 	std::string com;
-	parse_pattern(pat, com);
-
+	bool success = parse_pattern(pat, com);
+	// if (!success){
+	// 	std::cout << "ERROR: It's not a command and not a label: ";
+	// 	std::cout << line_ << std::endl;
+	// 	exit(1);
+	// }
 	return com;
 }
 
@@ -147,30 +160,30 @@ void Parser::parse_command_line(Command*& ret, int& status, int number)
 
 	switch (id){
 	case cmd_id::BEGIN:
-		ret =  new CommandBEGIN();
+		ret = new CommandBEGIN();
 		break;
 	case cmd_id::END:
 		ret = new CommandEND();
 		break;
 	case cmd_id::PUSH:
 		ret = new CommandPUSH();
-
-		parse_value(val);
+		parse_value(val, number);
 		dynamic_cast<CommandPUSH*>(ret)->value = val;
 		break;
+
 	case cmd_id::POP:
 		ret = new CommandPOP();
 		break;
 	case cmd_id::PUSHR:
 		ret = new CommandPUSHR();
 
-		rg = parse_register();
+		rg = parse_register(number);
 		dynamic_cast<CommandPUSHR*>(ret)->reg_id = rg;
 
 		break;
 	case cmd_id::POPR:
 		ret = new CommandPOPR();
-		rg = parse_register();
+		rg = parse_register(number);
 		dynamic_cast<CommandPOPR*>(ret)->reg_id = rg;
 		break;
 	case cmd_id::ADD:
@@ -192,9 +205,14 @@ void Parser::parse_command_line(Command*& ret, int& status, int number)
 		ret = new CommandIN();
 		break;
 	default:
-		std::cout << "Not a command" << std::endl;
+		parse_label_name(name);
+		if(name.length() != strlen(line_)){	
+			std::string text_err = "ERROR in command number: " + std::to_string(number+1) + ", Invalid syntax in line: " + std::string(line_);
+			std::cout << text_err << std::endl;
+			exit(1);
+		}
 		status = 0;
-
+		
 	// case CMD_ID::JMP:
 	// 	ret = new Cmd_JMP();
 	// 	status = 1;

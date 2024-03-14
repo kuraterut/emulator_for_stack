@@ -14,6 +14,13 @@ Emulator::Emulator(const std::vector<Command*>& cmd_list){
 	mode = false;
 }
 
+// Emulator::~Emulator(){
+// 	long size = code.size();
+// 	for (long i = 0; i < size; i++){
+// 		delete[] code[i];
+// 	}
+// }
+
 void Emulator::run(){
 	printf("Run programm\n");
 

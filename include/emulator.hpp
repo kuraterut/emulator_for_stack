@@ -19,6 +19,6 @@ public:
 	bool mode;
 
 	Emulator(const std::vector<Command*>& cmd_list);
-
+	// ~Emulator();
 	void run();
 };
