@@ -38,7 +38,7 @@ private:
 	bool parse_pattern(std::regex regexp);
 	bool parse_pattern(std::regex regexp, std::string& ret);
 	
-	std::string parse_command_name();
+	std::string parse_command_name(int number);
 	
 	Reg_t parse_register(int number);
 	bool parse_value(Value_t& val, int number);

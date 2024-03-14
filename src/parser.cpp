@@ -135,16 +135,16 @@ Reg_t Parser::parse_register(int number)
 	return reg_from_name_to_id(reg);
 }
 
-std::string Parser::parse_command_name()
+std::string Parser::parse_command_name(int number)
 {
 	std::regex pat("PUSHR|POPR|BEGIN|END|PUSH|POP|ADD|SUB|MUL|DIV|OUT|IN|[a-zA-Z0-9_]+:");
 	std::string com;
 	bool success = parse_pattern(pat, com);
-	// if (!success){
-	// 	std::cout << "ERROR: It's not a command and not a label: ";
-	// 	std::cout << line_ << std::endl;
-	// 	exit(1);
-	// }
+	if (!success){
+		std::string text_err = "ERROR in command number: " + std::to_string(number) + ", Invalid syntax in line: " + std::string(line_);
+		std::cout << text_err << std::endl;
+		exit(1);
+	}
 	return com;
 }
 
@@ -152,7 +152,7 @@ void Parser::parse_command_line(Command*& ret, int& status, int number)
 {
 	parse_newline_seq();
 	parse_space_seq();
-	std::string name = parse_command_name();
+	std::string name = parse_command_name(number);
 	Cmd_t id = cmd_from_name_to_id(name);
 
 	Value_t val;
@@ -169,7 +169,6 @@ void Parser::parse_command_line(Command*& ret, int& status, int number)
 		ret = new CommandPUSH();
 		parse_value(val, number);
 		dynamic_cast<CommandPUSH*>(ret)->value = val;
-		// std::cout << ret << std::endl;
 		break;
 
 	case cmd_id::POP:
@@ -207,11 +206,11 @@ void Parser::parse_command_line(Command*& ret, int& status, int number)
 		break;
 	default:
 		parse_label_name(name);
-		if(name.length() != strlen(line_)){	
-			std::string text_err = "ERROR in command number: " + std::to_string(number+1) + ", Invalid syntax in line: " + std::string(line_);
-			std::cout << text_err << std::endl;
-			exit(1);
-		}
+		// if(name.length() != strlen(line_)){	
+		// 	std::string text_err = "ERROR in command number: " + std::to_string(number) + ", Invalid syntax in line: " + std::string(line_);
+		// 	std::cout << text_err << std::endl;
+		// 	exit(1);
+		// }
 		status = 0;
 	
 	// case CMD_ID::JMP:
