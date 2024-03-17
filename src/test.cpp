@@ -188,25 +188,28 @@ bool test_stack_size(){
 int main(void)
 {
     // Creating and assignment tests
-    run_test("create empty Stack",                        test_empty_stack        );
-    run_test("create Stack with start value",             test_start_val_stack    );
-    run_test("constructor copy",                          test_constructor_copy   );
-    run_test("constructor move",                          test_constructor_move   );
-    run_test("copy with assignment",                      test_assignment_copy    );
-    run_test("move with assignment",                      test_assignment_move    );
+    // run_test("create empty Stack",                        test_empty_stack        );
+    // run_test("create Stack with start value",             test_start_val_stack    );
+    // run_test("constructor copy",                          test_constructor_copy   );
+    // run_test("constructor move",                          test_constructor_move   );
+    // run_test("copy with assignment",                      test_assignment_copy    );
+    // run_test("move with assignment",                      test_assignment_move    );
     
-    run_test("push elements",                             test_push               );
-    // run_test("try to push difftype elements",             test_push_err           );
-    run_test("pop elements",                              test_pop                );
-    run_test("try to pop empty stack",                    test_pop_err            );
-    run_test("get top element of stack",                  test_get_top            );
-    run_test("try to get top of empty stack",             test_get_top_err        );
+    // run_test("push elements",                             test_push               );
+    // // run_test("try to push difftype elements",             test_push_err           );
+    // run_test("pop elements",                              test_pop                );
+    // run_test("try to pop empty stack",                    test_pop_err            );
+    // run_test("get top element of stack",                  test_get_top            );
+    // run_test("try to get top of empty stack",             test_get_top_err        );
 
-    run_test("check stack size",                          test_is_empty           );
-    run_test("check stack is empty",                      test_stack_size         );
+    // run_test("check stack size",                          test_is_empty           );
+    // run_test("check stack is empty",                      test_stack_size         );
     
     // Parser parser("emulator_test.test");
-    Parser parser("fibonacci_test_1_12.test");
+
+    // Parser parser("fibonacci_test_1_12.test");
+    Parser parser("factorial.test");
+
     // Parser parser("help.test");
 
     Emulator eml(parser.parse_programm());

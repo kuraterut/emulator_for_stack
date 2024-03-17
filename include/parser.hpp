@@ -29,8 +29,9 @@ private:
 	const char* pos_;
 	const char* end_;
 	char line_[MAX_LINE_LEN];
-	// std::vector<std::pair<std::string, int>> labels;
-	// std::vector<std::pair<std::string, int>> jumps;
+	std::vector<std::pair<std::string, int>> labels_list;
+	std::vector<std::pair<std::string, int>> jumps_list;
+
 	void read_line_from_file();
 	
 	void parse_command_line(Command*& ret, int& status, int number);
@@ -47,8 +48,5 @@ private:
 
 	bool parse_space_seq();
 	bool parse_newline_seq();
-
-
-
 
 };

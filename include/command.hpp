@@ -9,6 +9,7 @@ typedef uint8_t Reg_t;
 typedef uint8_t Cmd_t;
 
 #define MAX_LINE_LEN 100
+#define REG_NUM 7
 
 extern std::vector<std::string> reg_names, cmd_names;
 
@@ -27,7 +28,16 @@ enum cmd_id: Cmd_t{
 	MUL,
 	DIV,
 	OUT,
-	IN	
+	IN,
+	JMP,
+	JEQ,
+	JNE,
+	JA,
+	JAE,
+	JB,
+	JBE,
+	CALL,
+	RET
 };
 
 
@@ -113,4 +123,57 @@ class CommandIN : public Command{
 	public:
 		virtual void execute(Emulator* emulator) override;
 		// virtual ~CommandIN() override;
+};
+
+class CommandJUMP : public Command{
+	public:
+		int go_to;
+		virtual bool check(Value_t var1, Value_t var2);
+		virtual void execute(Emulator* emulator); 
+};
+
+class CommandJMP : public CommandJUMP{
+	public:
+		virtual void execute(Emulator* emulator) override;
+};
+
+class CommandJEQ : public CommandJUMP{
+	public:
+		virtual bool check(Value_t var1, Value_t var2) override;
+};
+
+class CommandJNE : public CommandJUMP{
+	public:
+		virtual bool check(Value_t var1, Value_t var2) override;
+};
+
+class CommandJA : public CommandJUMP{
+	public:
+		virtual bool check(Value_t var1, Value_t var2) override;
+};
+
+class CommandJAE : public CommandJUMP{
+	public:
+		virtual bool check(Value_t var1, Value_t var2) override;
+};
+
+class CommandJB : public CommandJUMP{
+	public:
+		virtual bool check(Value_t var1, Value_t var2) override;
+};
+
+class CommandJBE : public CommandJUMP{
+	public:
+		virtual bool check(Value_t var1, Value_t var2) override;
+};
+
+
+class CommandCALL : public CommandJUMP{
+	public:
+		virtual void execute(Emulator* emulator) override;
+};
+
+class CommandRET : public Command{
+	public:
+		virtual void execute(Emulator* emulator) override;
 };

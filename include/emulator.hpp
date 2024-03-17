@@ -9,12 +9,13 @@
 #include "utils.hpp"
 #include "myStack.hpp"
 
-#define REG_NUM 7
+
 
 class Emulator{
 public:
 	std::vector<Command*> code;
 	myStack<Value_t> stack;
+	// myStack<Value_t> stack_calls;
 	int registers[REG_NUM];
 	bool mode;
 

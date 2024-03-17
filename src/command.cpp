@@ -6,15 +6,17 @@
 
 std::vector<std::string> reg_names = {"AX", "BX", "CX", "DX", "EX", "FX", "PC"};
 
-std::vector<std::string> cmd_names = {"BEGIN", "END", "PUSH", "POP", "PUSHR", 
-									  "POPR" , "ADD", "SUB" , "MUL", "DIV"  ,
-									  "OUT"  , "IN"};
+std::vector<std::string> cmd_names = {
+									"BEGIN", "END", "PUSH", "POP", "PUSHR", 
+									"POPR" , "ADD", "SUB" , "MUL", "DIV"  ,
+									"OUT"  , "IN" , "JMP" , "JEQ", "JNE"  , 
+									"JA"   , "JAE", "JB"  , "JBE", "CALL" , 
+									"RET", "label"
+									};
 
 Reg_t reg_from_name_to_id(std::string name){
 	
-	long reg_size = reg_names.size();
-	
-	for (long i = 0; i < reg_size; i++){
+	for (int i = 0; i < REG_NUM; i++){
 		if (name == reg_names[i]){
 			return i;
 		}
@@ -43,8 +45,10 @@ void CommandBEGIN::execute(Emulator* emulator){
 }
 
 void CommandEND::execute(Emulator* emulator){
-	emulator->mode = false;
-	emulator->registers[6] = emulator->code.size();
+	if (emulator->mode){
+		emulator->mode = false;
+		emulator->registers[REG_NUM-1] = emulator->code.size();
+	}
 }
 
 void CommandPUSH::execute(Emulator* emulator){
@@ -125,5 +129,72 @@ void CommandIN::execute(Emulator* emulator){
 		Value_t var;
 		std::cin >> var;
 		emulator->stack.push(var);
+	}
+}
+
+// void CommandJMP::execute(Emulator* emulator){
+// 	if(emulator->mode){
+// 		emulator->registers[6] = go_to - 1;
+// 	}
+// }
+bool CommandJUMP::check(Value_t var1, Value_t var2){
+	return 1;
+}
+
+void CommandJUMP::execute(Emulator* emulator){
+	if(emulator->mode){
+		Value_t var1, var2;
+		var1 = emulator->stack.top();
+		emulator->stack.pop();
+		var2 = emulator->stack.top();
+		emulator->stack.push(var1);
+		if (check(var1, var2)){
+			emulator->registers[REG_NUM-1] = go_to - 1; 
+		}
+	}
+}
+
+void CommandJMP::execute(Emulator* emulator){
+	if(emulator->mode){
+		emulator->registers[REG_NUM-1] = go_to - 1;
+	}
+}
+
+bool CommandJEQ::check(Value_t var1, Value_t var2){
+	return var1 == var2;
+}
+
+bool CommandJNE::check(Value_t var1, Value_t var2){
+	return var1 != var2;
+}
+
+bool CommandJA::check(Value_t var1, Value_t var2){
+	return var1 > var2;
+}
+
+bool CommandJAE::check(Value_t var1, Value_t var2){
+	return var1 >= var2;
+}
+
+bool CommandJB::check(Value_t var1, Value_t var2){
+	std::cout << "LOL JB" << std::endl;
+	return var1 < var2;
+}
+
+bool CommandJBE::check(Value_t var1, Value_t var2){
+	return var1 <= var2;
+}
+
+void CommandCALL::execute(Emulator* emulator){
+	if(emulator->mode){
+		emulator->stack.push(emulator->registers[REG_NUM-1]);
+		emulator->registers[REG_NUM-1] = go_to - 1;
+	}
+}
+
+void CommandRET::execute(Emulator* emulator){
+	if (emulator->mode){
+		emulator->registers[REG_NUM-1] = emulator->stack.top();
+		emulator->stack.pop();
 	}
 }

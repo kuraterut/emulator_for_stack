@@ -26,10 +26,10 @@ void Emulator::run(){
 
 	int code_size = static_cast<int>(code.size());
 	
-	while (registers[6] < code_size){
+	while (registers[REG_NUM-1] < code_size){
 
-		code[registers[6]]->execute(this);
-		registers[6]++;
+		code[registers[REG_NUM-1]]->execute(this);
+		registers[REG_NUM-1]++;
 	
 	}
 

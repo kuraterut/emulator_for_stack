@@ -137,9 +137,10 @@ Reg_t Parser::parse_register(int number)
 
 std::string Parser::parse_command_name(int number)
 {
-	std::regex pat("PUSHR|POPR|BEGIN|END|PUSH|POP|ADD|SUB|MUL|DIV|OUT|IN|[a-zA-Z0-9_]+:");
+	std::regex pat("PUSHR|POPR|BEGIN|END|PUSH|POP|ADD|SUB|MUL|DIV|OUT|IN|JMP|JEQ|JNE|JAE|JA|JBE|JB|CALL|RET|[a-zA-Z0-9_]+:");
 	std::string com;
 	bool success = parse_pattern(pat, com);
+	// std::cout<<com<<std::endl;
 	if (!success){
 		std::string text_err = "ERROR in command number: " + std::to_string(number) + ", Invalid syntax in line: " + std::string(line_);
 		std::cout << text_err << std::endl;
@@ -148,7 +149,7 @@ std::string Parser::parse_command_name(int number)
 	return com;
 }
 
-void Parser::parse_command_line(Command*& ret, int& status, int number)
+void Parser::parse_command_line(Command*& ret, int& lbl_jmp_cmd, int number)
 {
 	parse_newline_seq();
 	parse_space_seq();
@@ -159,12 +160,15 @@ void Parser::parse_command_line(Command*& ret, int& status, int number)
 	Reg_t rg;
 
 	switch (id){
+
 	case cmd_id::BEGIN:
 		ret = new CommandBEGIN();
 		break;
+
 	case cmd_id::END:
 		ret = new CommandEND();
 		break;
+
 	case cmd_id::PUSH:
 		ret = new CommandPUSH();
 		parse_value(val, number);
@@ -174,95 +178,99 @@ void Parser::parse_command_line(Command*& ret, int& status, int number)
 	case cmd_id::POP:
 		ret = new CommandPOP();
 		break;
+
 	case cmd_id::PUSHR:
 		ret = new CommandPUSHR();
-
 		rg = parse_register(number);
 		dynamic_cast<CommandPUSHR*>(ret)->reg_id = rg;
-
 		break;
+
 	case cmd_id::POPR:
 		ret = new CommandPOPR();
 		rg = parse_register(number);
 		dynamic_cast<CommandPOPR*>(ret)->reg_id = rg;
 		break;
+	
 	case cmd_id::ADD:
 		ret = new CommandADD();
 		break;
+	
 	case cmd_id::SUB:
 		ret = new CommandSUB();
 		break;
+	
 	case cmd_id::MUL:
 		ret = new CommandMUL();
 		break;
+	
 	case cmd_id::DIV:
 		ret = new CommandDIV();
 		break;
+	
 	case cmd_id::OUT:
 		ret = new CommandOUT();
 		break;
+	
 	case cmd_id::IN:
 		ret = new CommandIN();
 		break;
+	
+	case cmd_id::JMP:
+		ret = new CommandJMP();
+		lbl_jmp_cmd = 1;
+		break;
+
+	case cmd_id::JEQ:
+		ret = new CommandJEQ();
+		lbl_jmp_cmd = 1;
+		break;
+
+	case cmd_id::JNE:
+		ret = new CommandJNE();
+		lbl_jmp_cmd = 1;
+		break;
+
+	case cmd_id::JA:
+		ret = new CommandJA();
+		lbl_jmp_cmd = 1;
+		break;
+
+	case cmd_id::JAE:
+		ret = new CommandJAE();
+		lbl_jmp_cmd = 1;
+		break;
+
+	case cmd_id::JB:
+		ret = new CommandJB();
+		lbl_jmp_cmd = 1;
+		break;
+
+	case cmd_id::JBE:
+		ret = new CommandJBE();
+		lbl_jmp_cmd = 1;
+		break;
+
+	case cmd_id::CALL:
+		ret = new CommandCALL();
+		lbl_jmp_cmd = 1;
+		break;
+
+	case cmd_id::RET:
+		ret = new CommandRET();
+		break;
+
 	default:
 		parse_label_name(name);
-		// if(name.length() != strlen(line_)){	
-		// 	std::string text_err = "ERROR in command number: " + std::to_string(number) + ", Invalid syntax in line: " + std::string(line_);
-		// 	std::cout << text_err << std::endl;
-		// 	exit(1);
-		// }
-		status = 0;
-	
-	// case CMD_ID::JMP:
-	// 	ret = new Cmd_JMP();
-	// 	status = 1;
-	// 	break;
-	// case CMD_ID::JEQ:
-	// 	ret = new Cmd_JEQ();
-	// 	status = 1;
-	// 	break;
-	// case CMD_ID::JNE:
-	// 	ret = new Cmd_JNE();
-	// 	status = 1;
-	// 	break;
-	// case CMD_ID::JA:
-	// 	ret = new Cmd_JA();
-	// 	status = 1;
-	// 	break;
-	// case CMD_ID::JAE:
-	// 	ret = new Cmd_JAE();
-	// 	status = 1;
-	// 	break;
-	// case CMD_ID::JB:
-	// 	ret = new Cmd_JB();
-	// 	status = 1;
-	// 	break;
-	// case CMD_ID::JBE:
-	// 	ret = new Cmd_JBE();
-	// 	status = 1;
-	// 	break;
-	// case CMD_ID::CALL:
-	// 	ret = new Cmd_CALL();
-	// 	status = 1;
-	// 	break;
-	// case CMD_ID::RET:
-	// 	ret = new Cmd_RET();
-	// 	break;
-	// default:
-	// 	//ret = new Cmd_LABEL();
-	// 	name.pop_back();
-
-	// 	//dynamic_cast<Cmd_LABEL*>(ret)->name = name;
-	// 	status = 0;
-	// 	labels.push_back(std::pair<std::string, int>(name, number));
+		lbl_jmp_cmd = 0;
+		labels_list.push_back(std::pair<std::string, int>(name, number));
 
 	}
 
-	// if (status == 1){
-	// 	std::string lbl;
-	// 	parse_label_name(lbl);
-	// 	jumps.push_back(std::pair<std::string, int>(lbl, number));
-	// }
+	if (lbl_jmp_cmd == 1){
+		std::string label_name;
+		parse_label_name(label_name);
+		jumps_list.push_back(std::pair<std::string, int>(label_name, number));
+	}
 
 	parse_space_seq();
 	parse_newline_seq();
@@ -274,31 +282,25 @@ std::vector<Command*> Parser::parse_programm()
 {
 	std::vector<Command*> vec_cmd;
 	Command* cm;
-	int res = 2;
+	int lbl_jmp_cmd = 2;
 	int i = 0;
 	while (!file_.eof())
 	{
-		res = 2;
-		parse_command_line(cm, res, i);
-
-		if (res)
-		{
+		lbl_jmp_cmd = 2;
+		parse_command_line(cm, lbl_jmp_cmd, i);
+		if (lbl_jmp_cmd != 0){
 			vec_cmd.push_back(cm);
 			i++;
 		}
 	}
 
-
-	// for (size_t i = 0; i < jumps.size(); i++)
-	// {
-	// 	for (size_t j = 0; j < labels.size(); j++)
-	// 	{
-	// 		if (jumps[i].first == labels[j].first)
-	// 		{
-	// 			dynamic_cast<Cmd_JUMP*>(vec[jumps[i].second])->to = labels[j].second;
-	// 		}
-	// 	}
-	// }
+	for (size_t i = 0; i < jumps_list.size(); i++){
+		for (size_t j = 0; j < labels_list.size(); j++){
+			if (jumps_list[i].first == labels_list[j].first){
+				dynamic_cast<CommandJUMP*>(vec_cmd[jumps_list[i].second])->go_to = labels_list[j].second;
+			}
+		}
+	}
 
 	return vec_cmd;
 }
