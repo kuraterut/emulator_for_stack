@@ -55,31 +55,90 @@ CFLAGS += -I $(abspath include)
 SOURCES = $(wildcard src/*.cpp)
 
 
-OBJECTS = $(SOURCES:src/%.cpp=build/%.o)
+OBJECTS_all = $(SOURCES:src/%.cpp=build/%.o) build/alltest.o
+# OBJECTS_all +=  $(build/alltest.o)
+OBJECTS_fibo = $(SOURCES:src/%.cpp=build/%.o) build/fibo.o
+OBJECTS_fact = $(SOURCES:src/%.cpp=build/%.o) build/fact.o
+OBJECTS_factrec = $(SOURCES:src/%.cpp=build/%.o) build/factrec.o
 
-EXECUTABLE = build/test
+EXECUTABLE_all = build/alltest
+EXECUTABLE_fibo = build/fibo
+EXECUTABLE_fact = build/fact
+EXECUTABLE_factrec = build/factrec
 
 #---------------
 # Build process
 #---------------
 
+# default: $(EXECUTABLE)
+
+# # Link all object files together to obtain a binary:
+# # NOTE: all object files will be built first.
+# $(EXECUTABLE): $(OBJECTS) Makefile
+# 	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
+# 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+
+# # Compile an object file:
+# # NOTE: all include files are passed as dependencies (this may be redundant)
+# build/%.o: src/%.cpp $(INCLUDES) Makefile
+# 	@printf "$(BYELLOW)Building object file $(BCYAN)$@$(RESET)\n"
+# 	@mkdir -p build
+# 	$(CC) -c $< $(CFLAGS) -o $@
+
 # By default, build executable:
 # NOTE: first target in the file is the default.
-default: $(EXECUTABLE)
+
+default: $(EXECUTABLE_all)
 
 # Link all object files together to obtain a binary:
 # NOTE: all object files will be built first.
-$(EXECUTABLE): $(OBJECTS) Makefile
+$(EXECUTABLE_all): $(OBJECTS_all) build/alltest.o Makefile
 	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+	$(CC) $(LDFLAGS) $(OBJECTS_all) -o $@
+
+$(EXECUTABLE_fibo): $(OBJECTS_fibo) build/fibo.o Makefile
+	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
+	$(CC) $(LDFLAGS) $(OBJECTS_fibo) -o $@
+
+$(EXECUTABLE_fact): $(OBJECTS_fact) build/fact.o Makefile
+	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
+	$(CC) $(LDFLAGS) $(OBJECTS_fact) -o $@
+
+$(EXECUTABLE_factrec): $(OBJECTS_factrec) build/factrec.o Makefile
+	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
+	$(CC) $(LDFLAGS) $(OBJECTS_factrec) -o $@
+
+
+
 
 # Compile an object file:
 # NOTE: all include files are passed as dependencies (this may be redundant)
-build/%.o: src/%.cpp $(INCLUDES) Makefile
+build/alltest.o: src/tests/alltest.cpp $(INCLUDES) Makefile
 	@printf "$(BYELLOW)Building object file $(BCYAN)$@$(RESET)\n"
 	@mkdir -p build
 	$(CC) -c $< $(CFLAGS) -o $@
 
+# Compile an object file:
+# NOTE: all include files are passed as dependencies (this may be redundant)
+build/fibo.o: src/tests/fibo.cpp $(INCLUDES) Makefile
+	@printf "$(BYELLOW)Building object file $(BCYAN)$@$(RESET)\n"
+	@mkdir -p build
+	$(CC) -c $< $(CFLAGS) -o $@
+
+build/fact.o: src/tests/fact.cpp $(INCLUDES) Makefile
+	@printf "$(BYELLOW)Building object file $(BCYAN)$@$(RESET)\n"
+	@mkdir -p build
+	$(CC) -c $< $(CFLAGS) -o $@
+
+build/factrec.o: src/tests/factrec.cpp $(INCLUDES) Makefile
+	@printf "$(BYELLOW)Building object file $(BCYAN)$@$(RESET)\n"
+	@mkdir -p build
+	$(CC) -c $< $(CFLAGS) -o $@
+
+build/%.o: src/%.cpp $(INCLUDES) Makefile
+	@printf "$(BYELLOW)Building object file $(BCYAN)$@$(RESET)\n"
+	@mkdir -p build
+	$(CC) -c $< $(CFLAGS) -o $@
 
 
 
@@ -88,9 +147,17 @@ build/%.o: src/%.cpp $(INCLUDES) Makefile
 #--------------
 
 # Run program:
-test: $(EXECUTABLE)
-	./$(EXECUTABLE)
+test_all: $(EXECUTABLE_all)
+	./$(EXECUTABLE_all)
 
+fibo: $(EXECUTABLE_fibo)
+	./$(EXECUTABLE_fibo)
+
+factor: $(EXECUTABLE_fact)
+	./$(EXECUTABLE_fact)
+
+factor_rec: $(EXECUTABLE_factrec)
+	./$(EXECUTABLE_factrec)
 #---------------
 # Miscellaneous
 #---------------

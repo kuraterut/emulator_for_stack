@@ -3,10 +3,10 @@
 #include <typeinfo>
 #include <vector>
 
-#include "../include/test_system.hpp"
-#include "../include/parser.hpp"
-#include "../include/command.hpp"
-#include "../include/emulator.hpp"
+#include "../../include/test_system.hpp"
+#include "../../include/parser.hpp"
+#include "../../include/command.hpp"
+#include "../../include/emulator.hpp"
 //------------------------------------------
 // Creating and Assignment testing functions
 //------------------------------------------
@@ -221,9 +221,9 @@ int main(void)
     // Parser parser("fibonacci_test_1_12.test");
     // Parser parser("help.test");
     // emulator_run("emulator_test.test");
-    emulator_run("fibonacci_test_1_12.test");
-    emulator_run("factorial.test");
-    emulator_run("factorial_rec.test");
+    emulator_run("src/tests/fibonacci_test_1_12.test");
+    emulator_run("src/tests/factorial.test");
+    emulator_run("src/tests/factorial_rec.test");
     // emulator_run(".test");
 
     return EXIT_SUCCESS;
