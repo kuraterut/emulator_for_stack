@@ -260,7 +260,8 @@ void Parser::parse_command_line(Command*& ret, int& lbl_jmp_cmd, int number)
 		break;
 
 	default:
-		parse_label_name(name);
+		// parse_label_name(name);
+		name.pop_back();
 		lbl_jmp_cmd = 0;
 		labels_list.push_back(std::pair<std::string, int>(name, number));
 

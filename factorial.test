@@ -1,9 +1,11 @@
 BEGIN
+
 IN
 PUSH 1
 POPR AX
 PUSH 1
-for:
+
+factor:
 POP
 POPR BX
 PUSHR AX
@@ -14,7 +16,8 @@ PUSH 1
 PUSHR BX
 SUB
 PUSH 1
-JB for
+JB factor
+
 PUSHR AX
 OUT
 END

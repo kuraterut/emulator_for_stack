@@ -177,7 +177,7 @@ bool CommandJAE::check(Value_t var1, Value_t var2){
 }
 
 bool CommandJB::check(Value_t var1, Value_t var2){
-	std::cout << "LOL JB" << std::endl;
+	// std::cout << "LOL JB" << std::endl;
 	return var1 < var2;
 }
 
