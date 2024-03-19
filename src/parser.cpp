@@ -102,7 +102,7 @@ bool Parser::parse_value(Value_t& value, int number)
 		value = std::stoi(val);
 	}
 	else{
-		std::string text_err = "ERROR in command number: " + std::to_string(number+1) + ", Invalid value in line: " + std::string(line_);
+		std::string text_err = "ERROR: Invalid value in line: " + std::string(line_);
 		std::cout << text_err << std::endl;
 		exit(1);
 	}
@@ -128,7 +128,7 @@ Reg_t Parser::parse_register(int number)
 	std::string reg;
 	bool success = parse_pattern(pat, reg);
 	if (!success){
-		std::string text_err = "ERROR in command number: " + std::to_string(number+1) + ", Invalid register name in line: " + std::string(line_);
+		std::string text_err = "ERROR: Invalid register name in line: " + std::string(line_);
 		std::cout << text_err << std::endl;
 		exit(1);
 	}
@@ -142,7 +142,7 @@ std::string Parser::parse_command_name(int number)
 	bool success = parse_pattern(pat, com);
 	// std::cout<<com<<std::endl;
 	if (!success){
-		std::string text_err = "ERROR in command number: " + std::to_string(number) + ", Invalid syntax in line: " + std::string(line_);
+		std::string text_err = "ERROR: Invalid command syntax in line: " + std::string(line_);
 		std::cout << text_err << std::endl;
 		exit(1);
 	}
