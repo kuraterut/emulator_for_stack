@@ -1,41 +1,36 @@
-factor:
+fact:
+POP
+PUSHR CX
 PUSHR AX
-PUSHR BX
-MUL
+JEQ end
 POPR AX
 PUSH 1
-PUSHR BX
-SUB
-POPR BX
-PUSHR BX
-PUSH 1
-JAE end
-POP
-POP
-CALL factor
-RET
+ADD
+POPR CX
+PUSHR CX
+MUL
+CALL fact
 
-end:
-POP
-POP
-RET
-
-zero:
-PUSH 1
-OUT
-END
 
 BEGIN
 IN
 PUSH 0
-JEQ zero
-
+JAE endzero
 POP
-PUSH 1
 POPR AX
-POPR BX
-CALL factor
+PUSH 1
+PUSH 1
+POPR CX
+CALL fact
+END
 
-PUSHR AX
+endzero:
+PUSH 1
+OUT
+END
+
+end:
+POP
+POP
 OUT
 END

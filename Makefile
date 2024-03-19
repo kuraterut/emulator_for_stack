@@ -147,16 +147,16 @@ build/%.o: src/%.cpp $(INCLUDES) Makefile
 #--------------
 
 # Run program:
-test_all: $(EXECUTABLE_all)
+alltest: $(EXECUTABLE_all)
 	./$(EXECUTABLE_all)
 
 fibo: $(EXECUTABLE_fibo)
 	./$(EXECUTABLE_fibo)
 
-factor: $(EXECUTABLE_fact)
+fact: $(EXECUTABLE_fact)
 	./$(EXECUTABLE_fact)
 
-factor_rec: $(EXECUTABLE_factrec)
+factrec: $(EXECUTABLE_factrec)
 	./$(EXECUTABLE_factrec)
 #---------------
 # Miscellaneous

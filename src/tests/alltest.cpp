@@ -221,9 +221,9 @@ int main(void)
     // Parser parser("fibonacci_test_1_12.test");
     // Parser parser("help.test");
     // emulator_run("emulator_test.test");
-    emulator_run("src/tests/fibonacci_test_1_12.test");
-    emulator_run("src/tests/factorial.test");
-    emulator_run("src/tests/factorial_rec.test");
+    emulator_run("src/tests/fibo.test");
+    emulator_run("src/tests/fact.test");
+    emulator_run("src/tests/factrec.test");
     // emulator_run(".test");
 
     return EXIT_SUCCESS;
