@@ -19,12 +19,12 @@ public:
 	Parser& operator=(const Parser& parser) = delete;
 	Parser& operator=(Parser&& parser) = default;
 
-	Parser(const char* filename);
+	Parser(const char* filename, const char* file_bin_name);
 
 	std::vector<Command*> parse_programm();
 
 private:
-
+	std::ofstream file_bin;
 	std::ifstream file_;
 	const char* pos_;
 	const char* end_;

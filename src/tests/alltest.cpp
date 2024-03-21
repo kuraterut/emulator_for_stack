@@ -181,9 +181,9 @@ bool test_stack_size(){
     return (check1 == 1 && check2 == 0 && check3 == 3 && check4 == 2)? OK : FAIL;
 }
 
-void emulator_run(const char* file){
+void emulator_run(const char* file, const char* file_bin){
     std::cout << "\n" << std::endl;
-    Parser parser(file);
+    Parser parser(file, file_bin);
     Emulator emul(parser.parse_programm());
     emul.run();
     // std::cout << "\n" << std::endl;
@@ -221,9 +221,9 @@ int main(void)
     // Parser parser("fibonacci_test_1_12.test");
     // Parser parser("help.test");
     // emulator_run("emulator_test.test");
-    emulator_run("src/tests/fibo.test");
-    emulator_run("src/tests/fact.test");
-    emulator_run("src/tests/factrec.test");
+    emulator_run("src/tests/fibo.test", "programm_fibo.bin");
+    emulator_run("src/tests/fact.test", "programm_fact.bin");
+    emulator_run("src/tests/factrec.test", "programm_factrec.bin");
     // emulator_run(".test");
 
     return EXIT_SUCCESS;

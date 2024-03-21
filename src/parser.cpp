@@ -11,13 +11,14 @@
 
 
 
-Parser::Parser(const char* filename):
-	file_ (std::ifstream(filename, std::ios::in))
+Parser::Parser(const char* filename, const char* file_bin_name):
+	file_ (std::ifstream(filename, std::ios::in)), file_bin (std::ofstream(file_bin_name, std::ios::binary|std::ios::out))
 {	
 	VERIFY_CONTRACT(file_.good(), "Unable to open file \'%s\'\n", filename);
-
+	VERIFY_CONTRACT(file_bin.good(), "Unable to open file \'%s\'\n", filename);
 	read_line_from_file();
 }
+
 
 void Parser::read_line_from_file()
 {
@@ -162,101 +163,167 @@ void Parser::parse_command_line(Command*& ret, int& lbl_jmp_cmd, int number)
 	switch (id){
 
 	case cmd_id::BEGIN:
-		ret = new CommandBEGIN();
+		ret = new CommandBEGIN(); 
+
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+
 		break;
 
 	case cmd_id::END:
 		ret = new CommandEND();
+
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+		
 		break;
 
 	case cmd_id::PUSH:
 		ret = new CommandPUSH();
 		parse_value(val, number);
 		dynamic_cast<CommandPUSH*>(ret)->value = val;
+		
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+		file_bin.write((char*) &val, sizeof(Value_t));
+		
 		break;
 
 	case cmd_id::POP:
 		ret = new CommandPOP();
+		
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+		
 		break;
 
 	case cmd_id::PUSHR:
 		ret = new CommandPUSHR();
 		rg = parse_register(number);
 		dynamic_cast<CommandPUSHR*>(ret)->reg_id = rg;
+
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+		file_bin.write((char*) &rg, sizeof(Reg_t));
+		
 		break;
 
 	case cmd_id::POPR:
 		ret = new CommandPOPR();
 		rg = parse_register(number);
 		dynamic_cast<CommandPOPR*>(ret)->reg_id = rg;
+		
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+		file_bin.write((char*) &rg, sizeof(Reg_t));
+
 		break;
 	
 	case cmd_id::ADD:
 		ret = new CommandADD();
+
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+		
 		break;
 	
 	case cmd_id::SUB:
 		ret = new CommandSUB();
+		
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+
 		break;
 	
 	case cmd_id::MUL:
 		ret = new CommandMUL();
+
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+
 		break;
 	
 	case cmd_id::DIV:
 		ret = new CommandDIV();
+
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+
 		break;
 	
 	case cmd_id::OUT:
 		ret = new CommandOUT();
+
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+
 		break;
 	
 	case cmd_id::IN:
 		ret = new CommandIN();
+
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+
 		break;
 	
 	case cmd_id::JMP:
 		ret = new CommandJMP();
+
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+
 		lbl_jmp_cmd = 1;
 		break;
 
 	case cmd_id::JEQ:
 		ret = new CommandJEQ();
+
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+
 		lbl_jmp_cmd = 1;
 		break;
 
 	case cmd_id::JNE:
 		ret = new CommandJNE();
+
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+
 		lbl_jmp_cmd = 1;
 		break;
 
 	case cmd_id::JA:
 		ret = new CommandJA();
+
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+
 		lbl_jmp_cmd = 1;
 		break;
 
 	case cmd_id::JAE:
 		ret = new CommandJAE();
+
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+
 		lbl_jmp_cmd = 1;
 		break;
 
 	case cmd_id::JB:
 		ret = new CommandJB();
+
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+
 		lbl_jmp_cmd = 1;
 		break;
 
 	case cmd_id::JBE:
 		ret = new CommandJBE();
+
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+
 		lbl_jmp_cmd = 1;
 		break;
 
 	case cmd_id::CALL:
 		ret = new CommandCALL();
+
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+
 		lbl_jmp_cmd = 1;
 		break;
 
 	case cmd_id::RET:
 		ret = new CommandRET();
+
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+
 		break;
 
 	default:
@@ -264,6 +331,9 @@ void Parser::parse_command_line(Command*& ret, int& lbl_jmp_cmd, int number)
 		name.pop_back();
 		lbl_jmp_cmd = 0;
 		labels_list.push_back(std::pair<std::string, int>(name, number));
+		id = cmd_id::label;
+		file_bin.write((char*) &id, sizeof(Cmd_t));
+		file_bin.write((char*) &name, sizeof(std::string));
 
 	}
 
@@ -271,8 +341,10 @@ void Parser::parse_command_line(Command*& ret, int& lbl_jmp_cmd, int number)
 		std::string label_name;
 		parse_label_name(label_name);
 		jumps_list.push_back(std::pair<std::string, int>(label_name, number));
-	}
 
+		file_bin.write((char*) &label_name, sizeof(std::string));
+
+	}
 	parse_space_seq();
 	parse_newline_seq();
 

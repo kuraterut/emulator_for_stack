@@ -25,7 +25,7 @@ void Emulator::run(){
 	printf("Run programm\n");
 
 	int code_size = static_cast<int>(code.size());
-	
+
 	while (registers[REG_NUM-1] < code_size){
 
 		code[registers[REG_NUM-1]]->execute(this);

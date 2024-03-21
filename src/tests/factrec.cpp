@@ -8,9 +8,9 @@
 #include "../../include/command.hpp"
 #include "../../include/emulator.hpp"
 
-void emulator_run(const char* file){
+void emulator_run(const char* file, const char* file_bin){
     std::cout << "\n" << std::endl;
-    Parser parser(file);
+    Parser parser(file, file_bin);
     Emulator emul(parser.parse_programm());
     emul.run();
 }
@@ -24,6 +24,6 @@ void emulator_run(const char* file){
 
 int main(void)
 {
-    emulator_run("src/tests/factrec.test");
+    emulator_run("src/tests/factrec.test", "programm_factrec.bin");
     return 0;
 }

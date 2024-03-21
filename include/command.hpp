@@ -37,7 +37,8 @@ enum cmd_id: Cmd_t{
 	JB,
 	JBE,
 	CALL,
-	RET
+	RET,
+	label
 };
 
 
