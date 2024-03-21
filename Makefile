@@ -60,11 +60,13 @@ OBJECTS_all = $(SOURCES:src/%.cpp=build/%.o) build/alltest.o
 OBJECTS_fibo = $(SOURCES:src/%.cpp=build/%.o) build/fibo.o
 OBJECTS_fact = $(SOURCES:src/%.cpp=build/%.o) build/fact.o
 OBJECTS_factrec = $(SOURCES:src/%.cpp=build/%.o) build/factrec.o
+OBJECTS_rbin = $(SOURCES:src/%.cpp=build/%.o) build/read_bin.o
 
 EXECUTABLE_all = build/alltest
 EXECUTABLE_fibo = build/fibo
 EXECUTABLE_fact = build/fact
 EXECUTABLE_factrec = build/factrec
+EXECUTABLE_rbin = build/read_bin
 
 #---------------
 # Build process
@@ -92,6 +94,10 @@ default: $(EXECUTABLE_all)
 
 # Link all object files together to obtain a binary:
 # NOTE: all object files will be built first.
+$(EXECUTABLE_rbin): $(OBJECTS_rbin) build/read_bin.o Makefile
+	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
+	$(CC) $(LDFLAGS) $(OBJECTS_rbin) -o $@
+
 $(EXECUTABLE_all): $(OBJECTS_all) build/alltest.o Makefile
 	@printf "$(BYELLOW)Linking executable $(BCYAN)$@$(RESET)\n"
 	$(CC) $(LDFLAGS) $(OBJECTS_all) -o $@
@@ -113,10 +119,16 @@ $(EXECUTABLE_factrec): $(OBJECTS_factrec) build/factrec.o Makefile
 
 # Compile an object file:
 # NOTE: all include files are passed as dependencies (this may be redundant)
+build/read_bin.o: src/tests/read_bin.cpp $(INCLUDES) Makefile
+	@printf "$(BYELLOW)Building object file $(BCYAN)$@$(RESET)\n"
+	@mkdir -p build
+	$(CC) -c $< $(CFLAGS) -o $@
+
 build/alltest.o: src/tests/alltest.cpp $(INCLUDES) Makefile
 	@printf "$(BYELLOW)Building object file $(BCYAN)$@$(RESET)\n"
 	@mkdir -p build
 	$(CC) -c $< $(CFLAGS) -o $@
+
 
 # Compile an object file:
 # NOTE: all include files are passed as dependencies (this may be redundant)
@@ -158,6 +170,9 @@ fact: $(EXECUTABLE_fact)
 
 factrec: $(EXECUTABLE_factrec)
 	./$(EXECUTABLE_factrec)
+
+rbin: $(EXECUTABLE_rbin)
+	./$(EXECUTABLE_rbin)
 #---------------
 # Miscellaneous
 #---------------

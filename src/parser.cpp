@@ -159,6 +159,7 @@ void Parser::parse_command_line(Command*& ret, int& lbl_jmp_cmd, int number)
 
 	Value_t val;
 	Reg_t rg;
+	size_t len;
 
 	switch (id){
 
@@ -333,7 +334,10 @@ void Parser::parse_command_line(Command*& ret, int& lbl_jmp_cmd, int number)
 		labels_list.push_back(std::pair<std::string, int>(name, number));
 		id = cmd_id::label;
 		file_bin.write((char*) &id, sizeof(Cmd_t));
-		file_bin.write((char*) &name, sizeof(std::string));
+		len = name.length()+1;
+		file_bin.write((char*) &len, sizeof(len));
+		file_bin.write((char*) name.c_str(), len);
+
 
 	}
 
@@ -341,8 +345,9 @@ void Parser::parse_command_line(Command*& ret, int& lbl_jmp_cmd, int number)
 		std::string label_name;
 		parse_label_name(label_name);
 		jumps_list.push_back(std::pair<std::string, int>(label_name, number));
-
-		file_bin.write((char*) &label_name, sizeof(std::string));
+		len = label_name.length()+1;
+		file_bin.write((char*) &len, sizeof(len));
+		file_bin.write((char*) label_name.c_str(), len);
 
 	}
 	parse_space_seq();
@@ -366,7 +371,6 @@ std::vector<Command*> Parser::parse_programm()
 			i++;
 		}
 	}
-
 	for (size_t i = 0; i < jumps_list.size(); i++){
 		for (size_t j = 0; j < labels_list.size(); j++){
 			if (jumps_list[i].first == labels_list[j].first){

@@ -24,6 +24,6 @@ void emulator_run(const char* file, const char* file_bin){
 
 int main(void)
 {
-    emulator_run("src/tests/factrec.test", "programm_factrec.bin");
+    emulator_run("src/tests/factrec.test", "binaries/programm_factrec.bin");
     return 0;
 }

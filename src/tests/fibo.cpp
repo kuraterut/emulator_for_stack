@@ -24,6 +24,6 @@ void emulator_run(const char* file, const char* file_bin){
 
 int main(void)
 {
-    emulator_run("src/tests/fibo.test", "programm_fibo.bin");
+    emulator_run("src/tests/fibo.test", "binaries/programm_fibo.bin");
     return 0;
 }
